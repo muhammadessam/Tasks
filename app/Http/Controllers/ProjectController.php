@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = auth()->user()->projects->all();
         return view('project.index', compact('projects'));
     }
 
@@ -39,7 +40,7 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required'
         ]);
-        Project::create($request->all());
+        Auth::user()->projects()->create($request->all());
         alert()->success('Project Added');
         return redirect()->route('projects.index');
     }
@@ -52,6 +53,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        if ($project->user_id != \auth()->id())
+            abort(401);
         return view('project.show', compact('project'));
     }
 
@@ -86,8 +89,42 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if ($project->user_id != \auth()->id())
+            abort(401);
         $project->delete();
         alert()->success('Deleted Successfully');
         return redirect()->back();
+    }
+
+    public function add_task_get(Project $project)
+    {
+        return view('project.addProjectTask', compact('project'));
+    }
+
+    public function add_task_post(Request $request, Project $project)
+    {
+        $lowest = $project->tasks()->max('priority');
+        if ($lowest == null)
+            $lowest = 0;
+        $request->validate(['name' => 'required']);
+        $project->tasks()->create([
+            'name' => $request['name'],
+            'priority' => $lowest + 1
+        ]);
+        alert()->success('Task Added');
+        return redirect()->route('projects.show', $project);
+    }
+
+    public function updatePriority(Request $request, Project $project)
+    {
+        foreach ($request['tasks'] as $requestTask) {
+            foreach ($project->tasks as $projectTask) {
+                if ($requestTask['id'] == $projectTask['id']) {
+                    $projectTask['priority'] = $requestTask['priority'];
+                    $projectTask->save();
+                }
+            }
+        }
+        return $project->tasks;
     }
 }

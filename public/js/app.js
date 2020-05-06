@@ -1960,11 +1960,37 @@ __webpack_require__.r(__webpack_exports__);
         task.priority = index + 1;
       });
     },
-    updateDataBase: function updateDataBase() {}
+    updateDataBase: function updateDataBase() {
+      window.axios.post(route('updatePriority', this.project.id), {
+        tasks: this.tasks
+      }).then(function (res) {
+        console.log(res.data);
+      });
+    },
+    deleteTask: function deleteTask(task, index) {
+      var _this = this;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          window.axios["delete"](route('tasks.destroy', task.id)).then(function (res) {
+            _this.tasks.splice(index, 1);
+
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+          });
+        }
+      });
+    }
   },
   props: ['project'],
   mounted: function mounted() {
-    console.log(this.project);
     this.tasks = this.project.tasks;
   }
 });
@@ -6514,7 +6540,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.list-group-item[data-v-bc5c8d40] {\n    margin: 5px;\n    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);\n    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);\n}\n.list-group-item[data-v-bc5c8d40]:hover {\n    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);\n}\n.card-body[data-v-bc5c8d40] {\n    background-color: #e2e1e0;\n}\n", ""]);
+exports.push([module.i, "\n.list-group-item[data-v-bc5c8d40] {\n    margin: 5px;\n    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);\n    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);\n}\n.moving[data-v-bc5c8d40] {\n    box-shadow: 11px 0px 0px -4px rgba(0, 0, 0, 1);\n}\n.list-group-item[data-v-bc5c8d40]:hover {\n    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);\n}\n.card-body[data-v-bc5c8d40] {\n    background-color: #e2e1e0;\n}\n", ""]);
 
 // exports
 
@@ -41991,6 +42017,8 @@ var render = function() {
                 _c(
                   "draggable",
                   {
+                    attrs: { "ghost-class": "moving" },
+                    on: { end: _vm.updateDataBase, change: _vm.updatePriority },
                     model: {
                       value: _vm.tasks,
                       callback: function($$v) {
@@ -42002,18 +42030,14 @@ var render = function() {
                   [
                     _c(
                       "transition-group",
-                      _vm._l(_vm.tasks, function(element) {
+                      _vm._l(_vm.tasks, function(element, index) {
                         return _c(
                           "li",
                           {
                             key: element.id,
                             staticClass:
                               "list-group-item d-flex justify-content-between align-items-center",
-                            attrs: { options: { animation: 200 } },
-                            on: {
-                              change: _vm.updatePriority,
-                              end: _vm.updateDataBase
-                            }
+                            attrs: { options: { animation: 500 } }
                           },
                           [
                             _c("div", [
@@ -42025,9 +42049,18 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", [
-                              _c("button", { staticClass: "btn btn-danger" }, [
-                                _c("i", { staticClass: "fa fa-trash" })
-                              ])
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteTask(element, index)
+                                    }
+                                  }
+                                },
+                                [_c("i", { staticClass: "fa fa-trash" })]
+                              )
                             ])
                           ]
                         )
@@ -57553,6 +57586,7 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

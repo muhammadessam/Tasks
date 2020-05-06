@@ -13,4 +13,7 @@ class Project extends Model
     {
         return $this->hasMany(Task::class, 'project_id', 'id')->orderBy('priority');
     }
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

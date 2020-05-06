@@ -22,6 +22,11 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        \Illuminate\Support\Facades\DB::table('users')->insert([
+            'name'=>'Muhammad Essam',
+            'email'=>'muhammadessamwork@outlook.com',
+            'password'=>\Illuminate\Support\Facades\Hash::make('123456')
+        ]);
     }
 
     /**
