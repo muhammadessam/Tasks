@@ -22,13 +22,14 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::middleware('auth')->group(function () {
+
     Route::resource('projects', 'ProjectController');
     Route::resource('tasks', 'TaskController');
 
     /* Task Project route*/
     Route::get('{project}/addTask', 'ProjectController@add_task_get')->name('add.project.task.get');
     Route::post('{project}/addTask', 'ProjectController@add_task_post')->name('add.project.task.post');
-
+    Route::delete('/deleteProjectTask/{task}', 'ProjectController@deleteTask')->name('project.task.delete');
 
     /*updating priority in the database*/
     Route::post('{project}/updatePriority', 'ProjectController@updatePriority')->name('updatePriority');

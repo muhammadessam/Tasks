@@ -1980,7 +1980,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Yes, delete it!'
       }).then(function (result) {
         if (result.value) {
-          window.axios["delete"](route('tasks.destroy', task.id)).then(function (res) {
+          window.axios["delete"](route('project.task.delete', task.id)).then(function (res) {
             _this.tasks.splice(index, 1);
 
             Swal.fire('Deleted!', 'Your file has been deleted.', 'success');

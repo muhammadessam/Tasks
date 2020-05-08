@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -126,5 +127,14 @@ class ProjectController extends Controller
             }
         }
         return $project->tasks;
+    }
+
+
+    public function deleteTask(Task $task)
+    {
+        if ($task->project->user->id != auth()->id())
+            abort(401);
+        $task->delete();
+        return 'success';
     }
 }

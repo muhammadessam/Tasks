@@ -9,7 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    @routes
 
 
     <!-- Fonts -->
@@ -88,6 +87,7 @@
     </main>
 </div>
 @include('sweetalert::alert')
+@routes
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{asset('DataTables/datatables.min.js')}}"></script>

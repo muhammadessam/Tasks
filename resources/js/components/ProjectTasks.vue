@@ -66,7 +66,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.value) {
-                        window.axios.delete(route('tasks.destroy', task.id)).then((res) => {
+                        window.axios.delete(route('project.task.delete', task.id)).then((res) => {
                             this.tasks.splice(index, 1);
                             Swal.fire(
                                 'Deleted!',
