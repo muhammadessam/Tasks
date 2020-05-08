@@ -37,4 +37,4 @@
 * Vue. 
 * Ziggy (make laravel routes available into your javascript) 
 * sweetalert with laravel
-
+* datatables
