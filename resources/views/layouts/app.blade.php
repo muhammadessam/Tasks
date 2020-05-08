@@ -10,8 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     @routes
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -19,6 +18,7 @@
     <link rel="stylesheet" href="{{asset('fontawesome/css/all.min.css')}}">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('DataTables/datatables.min.css')}}">
 </head>
 <body>
 <div id="app">
@@ -88,6 +88,9 @@
     </main>
 </div>
 @include('sweetalert::alert')
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{asset('DataTables/datatables.min.js')}}"></script>
 @yield('javascript')
 </body>
 </html>

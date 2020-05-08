@@ -17,7 +17,7 @@ class TaskController extends Controller
         //
         $tasks = Task::with(['project' => function ($q) {
             $q->where('user_id', auth()->id());
-        }]);
+        }])->get();
         return view('task.index', compact('tasks'));
     }
 
@@ -50,7 +50,6 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
     }
 
     /**
@@ -61,7 +60,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('task.edit', compact('task'));
     }
 
     /**
@@ -73,7 +72,14 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([
+            'name' => 'required'
+        ]);
+        $task->update([
+            'name' => $request['name']
+        ]);
+        alert()->success('Done Editing');
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -84,9 +90,11 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
+
         if ($task->project->user->id != auth()->id())
             abort(401);
         $task->delete();
-        return $task->project->tasks;
+        alert()->success('Deleted Successfully');
+        return redirect()->route('tasks.index');
     }
 }
