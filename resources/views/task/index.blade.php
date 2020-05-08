@@ -4,16 +4,17 @@
 
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card">
                     <div class="card-header">Task</div>
 
                     <div class="card-body">
-                        <table style="width: 100%;" id="tasks">
+                        <table style="width: 100%;" class="text-center" id="tasks">
                             <thead>
                             <tr>
                                 <th>Task Name</th>
                                 <th>Priority</th>
+                                <th>Belongs To</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -22,6 +23,9 @@
                                 <tr>
                                     <td>{{$task->name}}</td>
                                     <td>{{$task->priority}}</td>
+                                    <td>
+                                        {{$task->project->name}}
+                                    </td>
                                     <td class="d-flex">
                                         <a class="btn mr-2 btn-primary" href="{{route('tasks.edit', $task)}}"><i
                                                 class="fa fa-edit"></i></a>
